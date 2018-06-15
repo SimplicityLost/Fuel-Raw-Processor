@@ -1,0 +1,9 @@
+{
+	"Module Paths": {
+		"Sheet1": "src/Sheet1.cls",
+		"a_FileProcessor": "src/a_FileProcessor.bas",
+		"InvForm": "src/InvForm.frm",
+		"b_InventoryWriter": "src/b_InventoryWriter.bas",
+		"FuelPusher": "src/FuelPusher.frm"
+	}
+}
