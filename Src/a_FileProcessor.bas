@@ -54,14 +54,6 @@ Function fuelmanprocessor()
     
     lastrow = Sheet2.Cells(Sheet2.Rows.Count, "A").End(xlUp).Row
 
-'    Sheet2.Range("A:N").AdvancedFilter _
-'        Action:=xlFilterInPlace, _
-'        criteriarange:=Sheet5.Range("BD2:BF4")
-'    Sheet2.Range("A2:A" & lastrow).SpecialCells(xlVisible).EntireRow.Delete
-'
-'    Sheet2.ShowAllData
-'
-'    lastrow = Sheet2.Cells(Sheet2.Rows.Count, "A").End(xlUp).Row
     For Each cell In Sheet2.Range("A1:A" & lastrow)
         Sheet2.Range("L" & cell.Row).Value = Application.WorksheetFunction.VLookup(Sheet2.Range("B" & cell.Row).Value, Sheet5.Range("Ay:az"), 2, 0)
         Sheet2.Range("C" & cell.Row).Value = Application.WorksheetFunction.VLookup(Sheet2.Range("L" & cell.Row).Value, Sheet5.Range("A:B"), 2, 0)
@@ -261,8 +253,7 @@ lastrow = Sheet2.Cells(Sheet2.Rows.Count, "A").End(xlUp).Row
     MsgBox ("All Done")
 End Function
 Function ChaseProcessor()
-
-With Sheet2
+    With Sheet2
     'delete top 2 rows
     .Rows("1:2").Delete
     
@@ -325,12 +316,12 @@ With Sheet2
         
         'fill N with Day(A)
         .Range("N" & i).Value = Day(.Range("A" & i).Value)
-oops:
+        oops:
     Next i
     'delete O-Z
     .Columns("O:Z").Delete
     
-End With
+    End With
     Call Dangerzone
     MsgBox ("All Done")
 End Function
