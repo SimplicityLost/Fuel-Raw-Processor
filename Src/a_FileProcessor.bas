@@ -292,12 +292,17 @@ Function ChaseProcessor()
         Next i
         
         'push array back to sheet
-        Sheet3.Range("A1:" & Split(Cells(1, UBound(fueldata, 2)).Address, "$")(1) & UBound(fueldata, 1)).Value = fueldata
-        Sheet3.Range("A:Z").Sort key1:=Sheet3.Range("K:K")
+        .Cells.Clear
+        .Range("A1:n1").Value = Split("Transaction Date|Account Name|Units|Unit Cost|Total Fuel Cost|Merchant Name|Merchant City|Merchant State / Province|Driver First Name|Driver Last Name|Store#|Card Name|Month|Day", "|")
+        .Range("A2:" & Split(Cells(1, UBound(fueldata, 2)).Address, "$")(1) & UBound(fueldata, 1) + 1).Value = fueldata
+        .Range("A:Z").Sort key1:=.Range("K:K"), Header:=xlYes
+        
+        
     End With
-
-'    Call Dangerzone
-'    MsgBox ("All Done")
+    
+    
+    Call Dangerzone
+    MsgBox ("All Done")
 End Function
 
 Function oldChaseProcessor()
