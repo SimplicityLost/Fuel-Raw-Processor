@@ -293,9 +293,9 @@ Function ChaseProcessor()
         
         'push array back to sheet
         .Cells.Clear
-        .Range("A1:n1").Value = Split("Transaction Date|Account Name|Units|Unit Cost|Total Fuel Cost|Merchant Name|Merchant City|Merchant State / Province|Driver First Name|Driver Last Name|Store#|Card Name|Month|Day", "|")
-        .Range("A2:" & Split(Cells(1, UBound(fueldata, 2)).Address, "$")(1) & UBound(fueldata, 1) + 1).Value = fueldata
-        .Range("A:Z").Sort key1:=.Range("K:K"), Header:=xlYes
+        ' .Range("A1:n1").Value = Split("Transaction Date|Account Name|Units|Unit Cost|Total Fuel Cost|Merchant Name|Merchant City|Merchant State / Province|Driver First Name|Driver Last Name|Store#|Card Name|Month|Day", "|")
+        .Range("A1:" & Split(Cells(1, UBound(fueldata, 2)).Address, "$")(1) & UBound(fueldata, 1)).Value = fueldata
+        .Range("A:Z").Sort key1:=.Range("K:K"), Header:=xlNo
         
         
     End With
