@@ -221,7 +221,7 @@ Function ExxonProcessor()
         Sheet2.Range("A:N").AdvancedFilter _
             Action:=xlFilterInPlace, _
             criteriarange:=Sheet5.Range("BD1:BF4")
-        If Sheet2.Range("A:A").SpecialCells(xlVisible).Count > 1 Then
+        If Sheet2.Range("A1:A" & lastrow).SpecialCells(xlVisible).Count > 1 Then
             Sheet2.Range("A2:A" & lastrow).SpecialCells(xlVisible).EntireRow.Delete
         End If
         Sheet2.ShowAllData
