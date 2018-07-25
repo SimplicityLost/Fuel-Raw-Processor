@@ -12,7 +12,7 @@ Private Sub CommandButton1_Click()
     If pushbox Then Call holding
 End Sub
 Private Sub CommandButton2_Click()
-    Call fuelmanprocessor
+    Call FuelmanProcessor
     If pushbox Then Call holding
 End Sub
 Private Sub CommandButton3_Click()
