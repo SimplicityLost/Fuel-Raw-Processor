@@ -3,10 +3,12 @@ Function ExxonProcessor()
     Dim fueldata
 
     With Sheet2
+        
         'read data into array
         lastrow = .Cells(.Rows.Count, "A").End(xlUp).Row
         fueldata = .Range("A3:BJ" & lastrow).Value
-        ReDim Preserve fueldata(1 To UBound(fueldata, 1), 1 To UBound(fueldata, 2) + 1)
+        ReDim Preserve fueldata(1 To UBound(fueldata, 1), 1 To UBound(fueldata, 2) + 1) 'overflow column if necessary
+        
         'move columns correctly to different columns of the array
         For i = 1 To UBound(fueldata, 1)
             fueldata(i, 2) = fueldata(i, 5)
@@ -25,14 +27,13 @@ Function ExxonProcessor()
             fueldata(i, 14) = Day(fueldata(i, 1))
         Next i
         
+        'shave extra columns off array
         ReDim Preserve fueldata(1 To UBound(fueldata, 1), 1 To 14)
-        
         
         'push array back to sheet
         .Cells.Clear
         .Range("A1:" & Split(Cells(1, UBound(fueldata, 2)).Address, "$")(1) & UBound(fueldata, 1)).Value = fueldata
         .Range("A:Z").Sort key1:=.Range("K:K"), Header:=xlNo
-        
         
     End With
     
@@ -48,7 +49,8 @@ Function ChaseProcessor()
         'read data into array
         lastrow = .Cells(.Rows.Count, "A").End(xlUp).Row
         fueldata = .Range("A3:M" & lastrow).Value
-        ReDim Preserve fueldata(1 To UBound(fueldata, 1), 1 To UBound(fueldata, 2) + 1)
+        ReDim Preserve fueldata(1 To UBound(fueldata, 1), 1 To UBound(fueldata, 2) + 1) 'overflow column if necessary
+        
         'move columns correctly to different columns of the array
         For i = 1 To UBound(fueldata, 1)
             'check for pointless data
@@ -78,13 +80,10 @@ Function ChaseProcessor()
         
         'push array back to sheet
         .Cells.Clear
-        ' .Range("A1:n1").Value = Split("Transaction Date|Account Name|Units|Unit Cost|Total Fuel Cost|Merchant Name|Merchant City|Merchant State / Province|Driver First Name|Driver Last Name|Store#|Card Name|Month|Day", "|")
         .Range("A1:" & Split(Cells(1, UBound(fueldata, 2)).Address, "$")(1) & UBound(fueldata, 1)).Value = fueldata
         .Range("A:Z").Sort key1:=.Range("K:K"), Header:=xlNo
         
-        
     End With
-    
     
     Call Dangerzone
     MsgBox ("All Done")
@@ -97,7 +96,7 @@ Function FuelmanProcessor()
         'read data into array
         lastrow = .Cells(.Rows.Count, "A").End(xlUp).Row
         fueldata = .Range("A16:AJ" & lastrow).Value
-        ReDim Preserve fueldata(1 To UBound(fueldata, 1), 1 To UBound(fueldata, 2) + 1)
+        ReDim Preserve fueldata(1 To UBound(fueldata, 1), 1 To UBound(fueldata, 2) + 1) 'overflow column if necessary
         
         'move columns correctly to different columns of the array
          For i = 1 To UBound(fueldata, 1)
@@ -117,64 +116,30 @@ Function FuelmanProcessor()
             fueldata(i, 14) = Day(fueldata(i, 1))
         Next i
         
+        'shave extra columns off array
         ReDim Preserve fueldata(1 To UBound(fueldata, 1), 1 To 14)
         
         'push array back to sheet
         .Cells.Clear
-        ' .Range("A1:n1").Value = Split("Transaction Date|Account Name|Units|Unit Cost|Total Fuel Cost|Merchant Name|Merchant City|Merchant State / Province|Driver First Name|Driver Last Name|Store#|Card Name|Month|Day", "|")
         .Range("A1:" & Split(Cells(1, UBound(fueldata, 2)).Address, "$")(1) & UBound(fueldata, 1)).Value = fueldata
         .Range("A:Z").Sort key1:=.Range("K:K"), Header:=xlNo
         
-        
     End With
-    
     
     Call Dangerzone
     MsgBox ("All Done")
 End Function
 
-Function FuelmanProcessor2()
-    fnd = Application.WorksheetFunction.Match("Account Code", Sheet2.Range("A:A"), 0)
-    Sheet2.Range("A1:A" & fnd + 1).EntireRow.Delete
-    'ak-ay,ah-ai, q-ae, m-n,f-i,d,a
-    Sheet2.Columns("AK:AY").Delete
-    Sheet2.Columns("Ah:Ai").Delete
-    Sheet2.Columns("q:Ae").Delete
-    Sheet2.Columns("m:n").Delete
-    Sheet2.Columns("f:i").Delete
-    Sheet2.Columns("d").Delete
-    Sheet2.Columns("a").Delete
-    Sheet2.Columns("I:K").Cut
-    Sheet2.Columns("C").Insert shift:=xlRight
-    Sheet2.Columns("F").Cut
-    Sheet2.Columns("A").Insert shift:=xlRight
-    
-    lastrow = Sheet2.Cells(Sheet2.Rows.Count, "A").End(xlUp).Row
-
-    For Each cell In Sheet2.Range("A1:A" & lastrow)
-        Sheet2.Range("L" & cell.Row).Value = Application.WorksheetFunction.VLookup(Sheet2.Range("B" & cell.Row).Value, Sheet5.Range("Ay:az"), 2, 0)
-        Sheet2.Range("C" & cell.Row).Value = Application.WorksheetFunction.VLookup(Sheet2.Range("L" & cell.Row).Value, Sheet5.Range("A:B"), 2, 0)
-        Sheet2.Range("M" & cell.Row).Value = Application.WorksheetFunction.Proper(Sheet2.Range("j" & cell.Row).Value & " " & Sheet2.Range("k" & cell.Row).Value)
-        Sheet2.Range("j" & cell.Row).Value = "FUELMAN"
-        Sheet2.Range("N" & cell.Row) = Month(Sheet2.Range("A" & cell.Row))
-        Sheet2.Range("O" & cell.Row) = Day(Sheet2.Range("A" & cell.Row))
-    Next cell
-    Sheet2.Cells.ClearFormats
-    Sheet2.Range("A:A").NumberFormat = "mm/d/yyyy;@"
-    Sheet2.Rows(1).Insert
-    Sheet2.Range("D1").Value = "Units"
-    Sheet2.Columns("b").Delete
-    Call Dangerzone
-    Sheet2.Rows(1).Delete
-End Function
-
 Function Dangerzone()
+    'filter entries that have an unusual number of gallons purchased
     Sheet2.Range("A:N").AdvancedFilter _
         Action:=xlFilterInPlace, _
         criteriarange:=Sheet5.Range("BB1:BB2")
     
     lastrow = Sheet2.Cells(Sheet2.Rows.Count, "A").End(xlUp).Row
     varstore = ""
+    
+    'build a string of stores with strange transactions
     If lastrow > 1 Then
         For Each cell In Sheet2.Range("K2:K" & lastrow).SpecialCells(xlVisible)
             If Not InStr(varstore, cell.Value) > 0 Then
@@ -185,10 +150,11 @@ Function Dangerzone()
     
     Sheet2.ShowAllData
     
-    Dangerzone = MsgBox("All Done!" & vbNewLine & "The following stores have an unusual transaction:" & vbNewLine & varstore)
+    Dangerzone = MsgBox("All Done!" & vbNewLine & "The following stores have an unusual transaction:" & vbNewLine & left(varstore,len(varstore) - 1)
 End Function
 
 Function holding()
+    'figure out first open row in the holding sheet and push data to it
     lastrowdst = Sheet3.Cells(Sheet3.Rows.Count, "A").End(xlUp).Row
     If lastrowdst = 1 And Sheet3.Range("A1") = "" Then lastrowdst = 0
     
