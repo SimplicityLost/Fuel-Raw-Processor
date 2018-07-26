@@ -91,6 +91,49 @@ Function ChaseProcessor()
 End Function
 
 Function FuelmanProcessor()
+    Dim fueldata
+
+    With Sheet2
+        'read data into array
+        lastrow = .Cells(.Rows.Count, "A").End(xlUp).Row
+        fueldata = .Range("A16:AJ" & lastrow).Value
+        ReDim Preserve fueldata(1 To UBound(fueldata, 1), 1 To UBound(fueldata, 2) + 1)
+        
+        'move columns correctly to different columns of the array
+         For i = 1 To UBound(fueldata, 1)
+            fueldata(i, 1) = fueldata(i, 5)
+            fueldata(i, 3) = fueldata(i, 32)
+            fueldata(i, 4) = fueldata(i, 33)
+            fueldata(i, 5) = fueldata(i, 36)
+            fueldata(i, 6) = fueldata(i, 10)
+            fueldata(i, 7) = fueldata(i, 11)
+            fueldata(i, 8) = fueldata(i, 12)
+            fueldata(i, 9) = "FUELMAN"
+            fueldata(i, 10) = fueldata(i, 16)
+            fueldata(i, 11) = Application.WorksheetFunction.VLookup(fueldata(i, 2), Sheet5.Range("AY:AZ"), 2, 0)
+            fueldata(i, 2) = Application.WorksheetFunction.VLookup(fueldata(i, 11), Sheet5.Range("A:B"), 2, 0)
+            fueldata(i, 12) = StrConv(fueldata(i, 15) & " " & fueldata(i, 16), vbProperCase)
+            fueldata(i, 13) = Month(fueldata(i, 1))
+            fueldata(i, 14) = Day(fueldata(i, 1))
+        Next i
+        
+        ReDim Preserve fueldata(1 To UBound(fueldata, 1), 1 To 14)
+        
+        'push array back to sheet
+        .Cells.Clear
+        ' .Range("A1:n1").Value = Split("Transaction Date|Account Name|Units|Unit Cost|Total Fuel Cost|Merchant Name|Merchant City|Merchant State / Province|Driver First Name|Driver Last Name|Store#|Card Name|Month|Day", "|")
+        .Range("A1:" & Split(Cells(1, UBound(fueldata, 2)).Address, "$")(1) & UBound(fueldata, 1)).Value = fueldata
+        .Range("A:Z").Sort key1:=.Range("K:K"), Header:=xlNo
+        
+        
+    End With
+    
+    
+    Call Dangerzone
+    MsgBox ("All Done")
+End Function
+
+Function FuelmanProcessor2()
     fnd = Application.WorksheetFunction.Match("Account Code", Sheet2.Range("A:A"), 0)
     Sheet2.Range("A1:A" & fnd + 1).EntireRow.Delete
     'ak-ay,ah-ai, q-ae, m-n,f-i,d,a
