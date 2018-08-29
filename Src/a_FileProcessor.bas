@@ -130,7 +130,11 @@ Function FuelmanProcessor()
     MsgBox ("All Done")
 End Function
 
-Function Dangerzone()
+Sub Dangerzone()
+    Sheet2.Range("A1:N1").Insert shift:=xlShiftDown
+    
+    Sheet2.Range("a1:n1") = Split("Transaction Date|Account Name|Units|Unit Cost|Total Fuel Cost|Merchant Name|Merchant City|Merchant State / Province|Driver First Name|Driver Last Name|Store#|Card Name|Month|Day", "|")
+
     'filter entries that have an unusual number of gallons purchased
     Sheet2.Range("A:N").AdvancedFilter _
         Action:=xlFilterInPlace, _
@@ -150,8 +154,15 @@ Function Dangerzone()
     
     Sheet2.ShowAllData
     
-    Dangerzone = MsgBox("All Done!" & vbNewLine & "The following stores have an unusual transaction:" & vbNewLine & left(varstore,len(varstore) - 1)
-End Function
+    If Len(varstore) > 0 Then
+        MsgBox ("The following stores have an unusual transaction:" & vbNewLine & vbNewLine & left(varstore, Len(varstore) - 2))
+    Else
+        MsgBox ("No unusual purchases.")
+    End If
+    
+    Sheet2.Range("A1:N1").Delete shift:=xlUp
+    
+End Sub
 
 Function holding()
     'figure out first open row in the holding sheet and push data to it
