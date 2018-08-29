@@ -8,8 +8,8 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Private Sub CommandButton1_Click()
-    Call ExxonProcessor
-    If pushbox Then Call holding
+    runerror = ExxonProcessor
+    If pushbox And runerror <> 0 Then Call holding
 End Sub
 Private Sub CommandButton2_Click()
     Call FuelmanProcessor

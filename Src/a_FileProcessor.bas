@@ -3,11 +3,28 @@ Function ExxonProcessor()
     Dim fueldata
 
     With Sheet2
+        failnames = ""
+        failnums = ""
         
         'read data into array
         lastrow = .Cells(.Rows.Count, "A").End(xlUp).Row
         fueldata = .Range("A3:BJ" & lastrow).Value
         ReDim Preserve fueldata(1 To UBound(fueldata, 1), 1 To UBound(fueldata, 2) + 1) 'overflow column if necessary
+        
+        'check for errors
+        For i = 1 To UBound(fueldata, 1)
+            If IsError(Application.VLookup(fueldata(i, 5), Sheet5.Range("J:K"), 2, 0)) Then
+                If InStr(failnames, fueldata(i, 5)) = 0 Then failnames = failnames + fueldata(i, 5) + ", "
+            ElseIf IsError(Application.VLookup(Application.WorksheetFunction.VLookup(fueldata(i, 5), Sheet5.Range("J:K"), 2, 0), Sheet5.Range("A:B"), 2, 0)) Then
+                If InStr(failnums, Application.VLookup(fueldata(i, 5), Sheet5.Range("J:K"), 2, 0)) = 0 Then failnums = failnums + Application.VLookup(fueldata(i, 5), Sheet5.Range("J:K"), 2, 0) + ", "
+            End If
+        Next i
+        
+        If Len(failnums) > 0 Or Len(failnames) > 0 Then
+            MsgBox ("ERROR - Process Aborted" + vbNewLine + vbNewLine + "These store names are missing from Lookup Column J: " + vbNewLine + "  " + failnames + vbNewLine + "These stores are missing from Lookup Column A: " + vbNewLine + "  " + failnums)
+            ExxonProcessor = 0
+            Exit Function
+        End If
         
         'move columns correctly to different columns of the array
         For i = 1 To UBound(fueldata, 1)
