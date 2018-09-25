@@ -16,8 +16,8 @@ Private Sub CommandButton2_Click()
     If pushbox Then Call holding
 End Sub
 Private Sub CommandButton3_Click()
-    Call ChaseProcessor
-    If pushbox Then Call holding
+    runerror = ChaseProcessor
+    If pushbox And runerror <> 0 Then Call holding
 End Sub
 Private Sub commandbutton4_click()
     InvForm.Show

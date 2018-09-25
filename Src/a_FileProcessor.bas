@@ -61,6 +61,9 @@ End Function
 
 Function ChaseProcessor()
     Dim fueldata
+    
+        failnames = ""
+        failnums = ""
 
     With Sheet2
         'read data into array
@@ -68,10 +71,23 @@ Function ChaseProcessor()
         fueldata = .Range("A3:M" & lastrow).Value
         ReDim Preserve fueldata(1 To UBound(fueldata, 1), 1 To UBound(fueldata, 2) + 1) 'overflow column if necessary
         
+        'check for errors
+        For i = 1 To UBound(fueldata, 1)
+            If IsError(Application.VLookup(left(fueldata(i, 2), 4), Sheet5.Range("A:B"), 2, 0)) Then
+                If InStr(failnums, left(fueldata(i, 2), 4)) = 0 Then failnums = failnums + left(fueldata(i, 2), 4) + ", "
+            End If
+        Next i
+        
+        If Len(failnums) > 0 Or Len(failnames) > 0 Then
+            MsgBox ("ERROR - Process Aborted" + vbNewLine + vbNewLine + "These stores are missing from Lookup Column A: " + vbNewLine + "  " + failnums)
+            ChaseProcessor = 0
+            Exit Function
+        End If
+        
         'move columns correctly to different columns of the array
         For i = 1 To UBound(fueldata, 1)
             'check for pointless data
-            If Left(fueldata(i, 2), 1) <> "L" Then
+            If left(fueldata(i, 2), 1) <> "L" Then
                 For n = 1 To 14
                     fueldata(i, n) = ""
                 Next n
@@ -88,7 +104,7 @@ Function ChaseProcessor()
             fueldata(i, 7) = fueldata(i, 9)
             fueldata(i, 9) = "CHASE"
             fueldata(i, 10) = "CHASE"
-            fueldata(i, 11) = Left(fueldata(i, 2), 4)
+            fueldata(i, 11) = left(fueldata(i, 2), 4)
             fueldata(i, 13) = Month(fueldata(i, 1))
             fueldata(i, 14) = Day(fueldata(i, 1))
             fueldata(i, 2) = Application.WorksheetFunction.VLookup(fueldata(i, 11), Sheet5.Range("A:B"), 2, 0)
