@@ -57,6 +57,7 @@ Function ExxonProcessor()
     
     Call Dangerzone
     MsgBox ("All Done")
+    ExxonProcessor = 1
 End Function
 
 Function ChaseProcessor()
@@ -120,6 +121,7 @@ Function ChaseProcessor()
     
     Call Dangerzone
     MsgBox ("All Done")
+    ChaseProcessor = 1
 End Function
 
 Function FuelmanProcessor()
