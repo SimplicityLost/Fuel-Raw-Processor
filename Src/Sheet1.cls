@@ -12,7 +12,7 @@ Private Sub CommandButton1_Click()
     If pushbox And runerror <> 0 Then Call holding
 End Sub
 Private Sub CommandButton2_Click()
-    Call FuelmanProcessor
+    Call FuelmanProcessor("FUELMAN")
     If pushbox Then Call holding
 End Sub
 Private Sub CommandButton3_Click()
@@ -21,6 +21,10 @@ Private Sub CommandButton3_Click()
 End Sub
 Private Sub commandbutton4_click()
     InvForm.Show
+End Sub
+Private Sub CommandButton5_Click()
+    Call FuelmanProcessor("CHEVRON")
+    If pushbox Then Call holding
 End Sub
 
 Private Sub fuelpushbutton_Click()

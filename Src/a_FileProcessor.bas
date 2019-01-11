@@ -124,7 +124,7 @@ Function ChaseProcessor()
     ChaseProcessor = 1
 End Function
 
-Function FuelmanProcessor()
+Function FuelmanProcessor(vendorname As String)
     Dim fueldata
 
     With Sheet2
@@ -142,7 +142,7 @@ Function FuelmanProcessor()
             fueldata(i, 6) = fueldata(i, 10)
             fueldata(i, 7) = fueldata(i, 11)
             fueldata(i, 8) = fueldata(i, 12)
-            fueldata(i, 9) = "FUELMAN"
+            fueldata(i, 9) = vendorname
             fueldata(i, 10) = fueldata(i, 16)
             fueldata(i, 11) = Application.WorksheetFunction.VLookup(fueldata(i, 2), Sheet5.Range("AY:AZ"), 2, 0)
             fueldata(i, 2) = Application.WorksheetFunction.VLookup(fueldata(i, 11), Sheet5.Range("A:B"), 2, 0)
